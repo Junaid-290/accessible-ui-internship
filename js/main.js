@@ -20,70 +20,62 @@
 		const panel = document.getElementById(panelId);
 		if (!panel) return;
 
+		// Determine if we should expand or collapse
 		const willExpand = typeof expand === 'boolean' ? expand : !(button.getAttribute('aria-expanded') === 'true');
 
-		// If expanding, collapse any other open panels first (clean collapse without recursion)
+		// If expanding, collapse other open panels
 		if (willExpand) {
 			buttons.forEach((other) => {
 				if (other === button) return;
 				if (other.getAttribute('aria-expanded') === 'true') {
 					const otherPanel = document.getElementById(other.getAttribute('aria-controls'));
-					other.setAttribute('aria-expanded', 'false');
-					if (otherPanel) {
-						otherPanel.setAttribute('aria-hidden', 'true');
-						if (!reduceMotion) {
-							otherPanel.style.maxHeight = otherPanel.scrollHeight + 'px';
-							// force layout then collapse
-							// eslint-disable-next-line @microsoft/sdl/no-document-read
-							void otherPanel.offsetHeight;
-							otherPanel.style.maxHeight = '0px';
-							const onEnd = function () {
-								otherPanel.hidden = true;
-								otherPanel.style.maxHeight = '';
-								otherPanel.removeEventListener('transitionend', onEnd);
-							};
-							otherPanel.addEventListener('transitionend', onEnd);
-						} else {
-							otherPanel.style.maxHeight = '0px';
-							otherPanel.hidden = true;
-						}
-					}
+					collapsePanel(other, otherPanel);
 				}
 			});
 		}
 
-		// Update the target button/panel state
-		button.setAttribute('aria-expanded', String(willExpand));
-		panel.setAttribute('aria-hidden', String(!willExpand));
+		// Toggle the target panel
 		if (willExpand) {
-			panel.hidden = false;
-			if (!reduceMotion) {
-				panel.style.maxHeight = panel.scrollHeight + 'px';
-				const onExpandEnd = function () {
-					panel.style.maxHeight = '';
-					panel.removeEventListener('transitionend', onExpandEnd);
-				};
-				panel.addEventListener('transitionend', onExpandEnd);
-			} else {
-				panel.style.maxHeight = 'none';
-			}
+			expandPanel(button, panel);
 		} else {
-			// collapse
-			if (!reduceMotion) {
-				panel.style.maxHeight = panel.scrollHeight + 'px';
-				// eslint-disable-next-line @microsoft/sdl/no-document-read
-				void panel.offsetHeight;
-				panel.style.maxHeight = '0px';
-				const onCollapseEnd = function () {
-					panel.hidden = true;
-					panel.style.maxHeight = '';
-					panel.removeEventListener('transitionend', onCollapseEnd);
-				};
-				panel.addEventListener('transitionend', onCollapseEnd);
-			} else {
-				panel.style.maxHeight = '0px';
+			collapsePanel(button, panel);
+		}
+	}
+
+	// Helper: expand a panel
+	function expandPanel(button, panel) {
+		button.setAttribute('aria-expanded', 'true');
+		panel.setAttribute('aria-hidden', 'false');
+		panel.hidden = false;
+		if (!reduceMotion) {
+			panel.style.maxHeight = panel.scrollHeight + 'px';
+			panel.addEventListener('transitionend', function onEnd() {
+				panel.style.maxHeight = '';
+				panel.removeEventListener('transitionend', onEnd);
+			});
+		} else {
+			panel.style.maxHeight = 'none';
+		}
+	}
+
+	// Helper: collapse a panel
+	function collapsePanel(button, panel) {
+		button.setAttribute('aria-expanded', 'false');
+		panel.setAttribute('aria-hidden', 'true');
+		if (!reduceMotion) {
+			const h = panel.scrollHeight;
+			panel.style.maxHeight = h + 'px';
+			// eslint-disable-next-line @microsoft/sdl/no-document-read
+			void panel.offsetHeight; // force layout
+			panel.style.maxHeight = '0px';
+			panel.addEventListener('transitionend', function onEnd() {
 				panel.hidden = true;
-			}
+				panel.style.maxHeight = '';
+				panel.removeEventListener('transitionend', onEnd);
+			});
+		} else {
+			panel.style.maxHeight = '0px';
+			panel.hidden = true;
 		}
 	}
 
