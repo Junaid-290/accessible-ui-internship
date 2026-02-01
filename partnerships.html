@@ -11,6 +11,55 @@
     <script src="js/main.js" defer></script>
 </head>
 <body>
-    
+    <main>
+        <header>
+            <h1>Partnerships — Accessible UI Examples</h1>
+            <p class="lede">Day 1: Accessible FAQ accordion with ARIA, keyboard support, and visible focus.</p>
+        </header>
+
+        <!-- Accessible FAQ accordion: follows WAI-ARIA Authoring Practices
+             - Each question is a native <button> that toggles its panel
+             - Button has aria-expanded and aria-controls attributes
+             - Panel uses role="region" and aria-labelledby, and is hidden when collapsed
+             - Keyboard support: Enter/Space toggles, Arrow Up/Down navigate, Home/End jump
+        -->
+        <section id="faq" aria-label="Frequently asked questions" class="faq">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq__item">
+                <h3 class="faq__heading">
+                    <button id="faq1-button" class="faq__button" aria-expanded="false" aria-controls="faq1-panel">
+                        What is the goal of this project?
+                    </button>
+                </h3>
+                <div id="faq1-panel" class="faq__panel" role="region" aria-labelledby="faq1-button" hidden>
+                    <p>This repo contains small accessible UI examples focused on semantic HTML, keyboard navigation, and screen-reader friendliness.</p>
+                </div>
+            </div>
+
+            <div class="faq__item">
+                <h3 class="faq__heading">
+                    <button id="faq2-button" class="faq__button" aria-expanded="false" aria-controls="faq2-panel">
+                        How should I run the site locally?
+                    </button>
+                </h3>
+                <div id="faq2-panel" class="faq__panel" role="region" aria-labelledby="faq2-button" hidden>
+                    <p>Open <a href="partnerships.html">partnerships.html</a> directly, or serve the folder with a lightweight static server (see repository docs).</p>
+                </div>
+            </div>
+
+            <div class="faq__item">
+                <h3 class="faq__heading">
+                    <button id="faq3-button" class="faq__button" aria-expanded="false" aria-controls="faq3-panel">
+                        What accessibility considerations were made?
+                    </button>
+                </h3>
+                <div id="faq3-panel" class="faq__panel" role="region" aria-labelledby="faq3-button" hidden>
+                    <p>Keyboard navigation, clear focus styles, ARIA states, and reduced-motion support are implemented.</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
 </body>
 </html>
