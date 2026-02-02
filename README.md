@@ -47,7 +47,8 @@ EchoSee is an AI-powered AR device that provides real-time subtitles to the hear
 
 ```
 accessible-ui-internship/
-├── index.html              # Main page with hero, FAQ, and contact form
+├── index.html              # Home page with hero and FAQ
+├── contact.html            # Contact form page
 ├── css/
 │   ├── variables.css       # CSS custom properties
 │   ├── base.css            # Reset and global styles

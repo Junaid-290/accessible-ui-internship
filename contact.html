@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us — EchoSee</title>
+    
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <!-- Skip navigation link for keyboard users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Screen reader live region for announcements -->
+    <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    
+    <header class="hero">
+        <h1>Contact Us</h1>
+        <p class="hero__tagline">Have questions? We'd love to hear from you.</p>
+        <div class="hero__cta">
+            <a href="index.html" class="btn btn--secondary">Back to Home</a>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Contact Form with Floating Labels -->
+        <section id="contact" class="contact" aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Get in Touch</h2>
+            <p class="contact__subtitle">Fill out the form below and we'll get back to you soon.</p>
+            
+            <form id="contact-form" class="contact__form" novalidate>
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-input" required autocomplete="name" aria-describedby="name-error" placeholder=" ">
+                    <span id="name-error" class="form-error" aria-live="polite"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" required autocomplete="email" aria-describedby="email-error" placeholder=" ">
+                    <span id="email-error" class="form-error" aria-live="polite"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <select id="subject" name="subject" class="form-input" required aria-describedby="subject-error">
+                        <option value=""></option>
+                        <option value="general">General Inquiry</option>
+                        <option value="preorder">Pre-Order Question</option>
+                        <option value="partnership">Partnership Opportunity</option>
+                        <option value="support">Technical Support</option>
+                    </select>
+                    <span id="subject-error" class="form-error" aria-live="polite"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" class="form-input form-textarea" rows="5" required aria-describedby="message-error" placeholder=" "></textarea>
+                    <span id="message-error" class="form-error" aria-live="polite"></span>
+                </div>
+                
+                <button type="submit" class="btn btn--primary contact__submit">
+                    <span class="btn__text">Send Message</span>
+                    <span class="btn__loader"></span>
+                </button>
+                
+                <div id="form-success" class="form-success" aria-live="polite" hidden>
+                    <svg class="form-success__icon" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true">
+                        <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M7 12l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h3>Thank you!</h3>
+                    <p>Your message has been sent successfully. We'll get back to you soon.</p>
+                    <a href="contact.html" class="btn btn--secondary" style="margin-top:16px;">Send Another Message</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__content">
+            <div class="footer__brand">
+                <p class="footer__logo">EchoSee</p>
+                <p class="footer__copyright">&copy; 2026 EchoSee. All rights reserved.</p>
+            </div>
+            <div class="footer__links">
+                <a href="index.html" class="footer__contact-btn">Back to Home</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
