@@ -320,24 +320,31 @@
 .partners-carousel {
     margin: 60px 0;
     position: relative;
-    overflow: hidden;
 }
 .carousel-container {
-    overflow: hidden;
     padding: 20px 0;
 }
 .carousel-track {
     display: flex;
     gap: 40px;
-    animation: carouselScroll 30s linear infinite;
-    width: max-content;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    padding-bottom: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--bg);
 }
-.carousel-track:hover {
-    animation-play-state: paused;
+.carousel-track::-webkit-scrollbar {
+    height: 8px;
 }
-@keyframes carouselScroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 20px)); }
+.carousel-track::-webkit-scrollbar-track {
+    background: var(--bg);
+    border-radius: 4px;
+}
+.carousel-track::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
 }
 .carousel-item {
     display: flex;
@@ -346,6 +353,7 @@
     gap: 12px;
     padding: 20px;
     min-width: 140px;
+    scroll-snap-align: center;
 }
 .partner-logo {
     color: var(--muted);
