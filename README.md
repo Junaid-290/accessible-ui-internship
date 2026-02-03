@@ -41,6 +41,20 @@ EchoSee is an AI-powered AR device that provides real-time subtitles to the hear
 - Success message with checkmark icon
 - Footer with Contact Us button that scrolls to form
 
+### Day 3 ✅ - Partnerships Page
+- Logo carousel with auto-scroll animation
+- Pause on hover for better accessibility
+- Previous/Next navigation buttons
+- 3D flip cards for partnership types
+- Animated statistics counter
+- Keyboard accessible carousel controls
+
+### Recent Fixes ✅
+- Restored Contact Us button in footer alongside Partnerships
+- Simplified hero section (Pre-Order button only)
+- Fixed carousel navigation (smooth scroll on button click)
+- Fixed hover pause speed-up bug
+
 ---
 
 ## Project Structure
@@ -49,6 +63,7 @@ EchoSee is an AI-powered AR device that provides real-time subtitles to the hear
 accessible-ui-internship/
 ├── index.html              # Home page with hero and FAQ
 ├── contact.html            # Contact form page
+├── partnerships.html       # Partnerships page with carousel
 ├── css/
 │   ├── variables.css       # CSS custom properties
 │   ├── base.css            # Reset and global styles
@@ -56,7 +71,7 @@ accessible-ui-internship/
 │   ├── utilities.css       # Utilities and responsive breakpoints
 │   └── styles.css          # Main import file
 ├── js/
-│   └── main.js             # FAQ accordion and form validation
+│   └── main.js             # FAQ, form, carousel, and flip card logic
 └── README.md               # This file
 ```
 
@@ -69,6 +84,7 @@ accessible-ui-internship/
 - ARIA attributes for accessibility
 - Skip navigation link
 - Screen reader live regions
+- Multiple pages with consistent navigation
 
 ### CSS
 - Modular architecture (5 separate files)
@@ -76,6 +92,8 @@ accessible-ui-internship/
 - Button styles with hover effects
 - FAQ accordion animations
 - Floating label form styling
+- Logo carousel with auto-scroll
+- 3D flip card animations
 - Focus-visible states
 - Reduced motion support
 - Mobile-first responsive design
@@ -86,15 +104,19 @@ accessible-ui-internship/
 - Screen reader announcements
 - Form validation
 - Loading and success states
+- Carousel auto-scroll animation
+- Flip card hover/focus effects
+- Statistics counter animation
 
 ### Accessibility (WCAG 2.1 Level AA)
 - Semantic HTML
-- Keyboard navigation
+- Keyboard navigation (Tab, Arrow keys, Enter, Space)
 - Screen reader support
 - Focus visible states
 - Color contrast compliance
 - Reduced motion respect
 - ARIA roles & labels
+- Skip links
 
 ---
 
@@ -111,6 +133,11 @@ npx http-server -c-1 . -p 8080
 # Then visit: http://localhost:8080
 ```
 
+### Page URLs
+- Home: http://localhost:8080/index.html
+- Contact: http://localhost:8080/contact.html
+- Partnerships: http://localhost:8080/partnerships.html
+
 ---
 
 ## Testing Checklist
@@ -119,15 +146,18 @@ npx http-server -c-1 . -p 8080
 - [ ] Tab through FAQ buttons
 - [ ] Use Enter/Space to toggle answers
 - [ ] Use Arrow Up/Down to navigate between questions
+- [ ] Use Arrow Left/Right to navigate carousel
 - [ ] Focus visible outline appears on all buttons
 - [ ] Skip to main content link works
 - [ ] Tab through form fields
+- [ ] Tab through flip cards (Enter/Space to flip)
 
 ### Screen Reader
 - [ ] Reads heading structure correctly
 - [ ] Announces button state ("expanded" / "collapsed")
 - [ ] Form validation errors are announced
 - [ ] Success message is announced
+- [ ] Carousel announcements for partner logos
 
 ### Visual
 - [ ] FAQ panels expand/collapse smoothly
@@ -135,18 +165,25 @@ npx http-server -c-1 . -p 8080
 - [ ] Floating labels animate on focus
 - [ ] Loading spinner shows during submission
 - [ ] Footer displays correctly at bottom
+- [ ] Carousel scrolls automatically
+- [ ] Flip cards rotate on hover/focus
+- [ ] Statistics counter animates when visible
 
 ---
 
-## Git Workflow
+## changes are committed with Git Workflow
 
-All changes are committed with descriptive messages and pushed to:
+All descriptive messages and pushed to:
 ```
 https://github.com/Junaid-290/accessible-ui-internship.git
 ```
 
 ### Recent Commits
 ```
+9029fe1 - fix: prevent multiple auto-scroll loops on hover
+6a3722e - fix: remove extra buttons from hero, keep only Pre-Order
+748a72b - fix: restore Contact Us button in footer and fix carousel navigation
+496c828 - feat: Day 3 - Partnerships page with logo carousel and card flip animations
 c90fc28 - docs: Update README with Day 2 progress
 e194367 - refactor: Split CSS into modular files
 3f79eb7 - Rename partnerships.html to index.html
@@ -164,10 +201,17 @@ a7a5c33 - Fix FAQ accordion collapse bug
 - `aria-hidden` — Hides collapsed panels
 - `aria-invalid` — Marks invalid form fields
 - `aria-live` — Announces dynamic content
+- `aria-label` — Provides labels for carousel items
 - `role="region"` — Marks panels as important regions
 
 ### Keyboard Support
-Follows [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) for accordion pattern.
+- **FAQ**: Tab, Enter/Space, Arrow Up/Down, Home/End
+- **Carousel**: Arrow Left/Right, Tab to reach controls
+- **Flip Cards**: Tab to focus, Enter/Space to flip
+- **Form**: Standard form navigation
+- **Skip Link**: Tab to activate skip navigation
+
+Follows [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) for accordion and carousel patterns.
 
 ---
 
@@ -197,11 +241,12 @@ All color combinations meet WCAG AA contrast requirements.
 
 ## Next Steps
 
-1. **Day 3:** Implement logo carousel for partnerships
-2. **Day 4:** Add card flip animations
-3. **Day 5:** Comprehensive accessibility audit & polish
+1. **Day 4:** Add more partnership features if needed
+2. **Day 5:** Comprehensive accessibility audit & polish
+3. **Optional:** Add Lottie animations for hero section
+4. **Optional:** Implement dark mode toggle
 
 ---
 
-**Last Updated:** February 2, 2026  
-**Status:** Day 1-2 Complete | Days 3–5 In Progress
+**Last Updated:** February 3, 2026  
+**Status:** Day 3 Complete | Days 4–5 In Progress
