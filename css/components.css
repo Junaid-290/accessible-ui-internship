@@ -329,15 +329,7 @@
 .carousel-track {
     display: flex;
     gap: 40px;
-    animation: carouselScroll 30s linear infinite;
     width: max-content;
-}
-.carousel-track:hover {
-    animation-play-state: paused;
-}
-@keyframes carouselScroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 20px)); }
 }
 .carousel-item {
     display: flex;

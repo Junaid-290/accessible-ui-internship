@@ -201,44 +201,88 @@
     const nextBtn = document.querySelector('.carousel-btn--next');
     
     if (carouselContainer && carouselTrack && prevBtn && nextBtn) {
-        const itemWidth = 180; // Width of carousel item + gap
+        const scrollAmount = 180;
         let currentOffset = 0;
-        const maxOffset = -(carouselTrack.scrollWidth - carouselTrack.parentElement.offsetWidth + 200);
+        let targetOffset = 0;
+        let animationId = null;
+        let autoScrollId = null;
+        let isPaused = false;
         
-        // Store initial animation
-        const originalAnimation = carouselTrack.style.animation;
+        const totalWidth = carouselTrack.scrollWidth;
+        const visibleWidth = carouselContainer.offsetWidth;
+        const maxOffset = -(totalWidth - visibleWidth + 200);
         
-        function getCurrentTransform() {
-            const style = window.getComputedStyle(carouselTrack);
-            const matrix = new DOMMatrix(style.transform);
-            return matrix.m41;
+        const speed = 0.3;
+        
+        function animate() {
+            const diff = targetOffset - currentOffset;
+            if (Math.abs(diff) > 0.5) {
+                currentOffset += diff * 0.08;
+                carouselTrack.style.transform = `translateX(${currentOffset}px)`;
+                animationId = requestAnimationFrame(animate);
+            } else {
+                currentOffset = targetOffset;
+                carouselTrack.style.transform = `translateX(${currentOffset}px)`;
+                animationId = null;
+            }
         }
         
-        function updateAnimation() {
-            carouselTrack.style.animation = 'none';
-            carouselTrack.offsetHeight; // Trigger reflow
-            carouselTrack.style.animation = originalAnimation;
+        function startAnimation() {
+            if (!animationId) {
+                animate();
+            }
         }
         
-        prevBtn.addEventListener('click', () => {
-            // Move forward (positive direction)
-            currentOffset = Math.min(0, currentOffset + itemWidth);
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+        
+        function autoScroll() {
+            if (isPaused) return;
+            
+            targetOffset -= speed;
+            
+            if (targetOffset < maxOffset) {
+                targetOffset = 0;
+            }
+            
+            currentOffset = targetOffset;
             carouselTrack.style.transform = `translateX(${currentOffset}px)`;
             
-            // Restart animation to sync with new position
-            updateAnimation();
+            autoScrollId = requestAnimationFrame(autoScroll);
+        }
+        
+        // Start auto-scroll
+        autoScroll();
+        
+        prevBtn.addEventListener('click', () => {
+            stopAnimation();
+            targetOffset = Math.min(0, targetOffset + scrollAmount);
+            startAnimation();
         });
         
         nextBtn.addEventListener('click', () => {
-            // Move backward (negative direction)
-            currentOffset = Math.max(maxOffset, currentOffset - itemWidth);
-            carouselTrack.style.transform = `translateX(${currentOffset}px)`;
-            
-            // Restart animation to sync with new position
-            updateAnimation();
+            stopAnimation();
+            targetOffset = Math.max(maxOffset, targetOffset - scrollAmount);
+            startAnimation();
         });
         
-        // Keyboard navigation
+        carouselContainer.addEventListener('mouseenter', () => {
+            isPaused = true;
+            if (autoScrollId) {
+                cancelAnimationFrame(autoScrollId);
+                autoScrollId = null;
+            }
+        });
+        
+        carouselContainer.addEventListener('mouseleave', () => {
+            isPaused = false;
+            autoScroll();
+        });
+        
         carouselTrack.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
