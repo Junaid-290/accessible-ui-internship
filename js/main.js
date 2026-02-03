@@ -202,52 +202,50 @@
     
     if (carouselContainer && carouselTrack && prevBtn && nextBtn) {
         const itemWidth = 180; // Width of carousel item + gap
-        let autoScrollInterval;
+        let currentOffset = 0;
+        const maxOffset = -(carouselTrack.scrollWidth - carouselTrack.parentElement.offsetWidth + 200);
         
-        function getScrollPosition() {
-            return parseInt(carouselTrack.style.scrollLeft) || 0;
+        // Store initial animation
+        const originalAnimation = carouselTrack.style.animation;
+        
+        function getCurrentTransform() {
+            const style = window.getComputedStyle(carouselTrack);
+            const matrix = new DOMMatrix(style.transform);
+            return matrix.m41;
         }
         
-        function scrollByAmount(amount) {
-            carouselTrack.style.scrollBehavior = 'smooth';
-            carouselTrack.scrollLeft += amount;
-            
-            // Handle wrap-around for continuous feel
-            const maxScroll = carouselTrack.scrollWidth - carouselTrack.clientWidth;
-            if (carouselTrack.scrollLeft >= maxScroll) {
-                carouselTrack.scrollLeft = 0;
-            } else if (carouselTrack.scrollLeft <= 0) {
-                carouselTrack.scrollLeft = maxScroll;
-            }
-        }
-        
-        function startAutoScroll() {
-            // Don't use auto-scroll, let user control it
-        }
-        
-        function stopAutoScroll() {
-            if (autoScrollInterval) {
-                clearInterval(autoScrollInterval);
-                autoScrollInterval = null;
-            }
+        function updateAnimation() {
+            carouselTrack.style.animation = 'none';
+            carouselTrack.offsetHeight; // Trigger reflow
+            carouselTrack.style.animation = originalAnimation;
         }
         
         prevBtn.addEventListener('click', () => {
-            scrollByAmount(-itemWidth);
+            // Move forward (positive direction)
+            currentOffset = Math.min(0, currentOffset + itemWidth);
+            carouselTrack.style.transform = `translateX(${currentOffset}px)`;
+            
+            // Restart animation to sync with new position
+            updateAnimation();
         });
         
         nextBtn.addEventListener('click', () => {
-            scrollByAmount(itemWidth);
+            // Move backward (negative direction)
+            currentOffset = Math.max(maxOffset, currentOffset - itemWidth);
+            carouselTrack.style.transform = `translateX(${currentOffset}px)`;
+            
+            // Restart animation to sync with new position
+            updateAnimation();
         });
         
-        // Optional: Keyboard navigation for carousel
+        // Keyboard navigation
         carouselTrack.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
-                scrollByAmount(-itemWidth);
+                prevBtn.click();
             } else if (e.key === 'ArrowRight') {
                 e.preventDefault();
-                scrollByAmount(itemWidth);
+                nextBtn.click();
             }
         });
     }
