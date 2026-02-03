@@ -1,21 +1,197 @@
-/* FAQ Accordion - Keyboard navigation, ARIA, reduced motion support */
-(function(){'use strict';const buttons=document.querySelectorAll('.faq__button');if(!buttons.length)return;const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* ============================================
+   ECHOSEE MAIN JAVASCRIPT
+   FAQ Accordion + Contact Form
+   ============================================ */
 
-function expandPanel(b,p){b.setAttribute('aria-expanded','true');p.setAttribute('aria-hidden','false');p.hidden=false;if(!reduceMotion){p.style.maxHeight=p.scrollHeight+'px';p.addEventListener('transitionend',function onEnd(){p.style.maxHeight='none';p.removeEventListener('transitionend',onEnd)},{once:true})}}
-function collapsePanel(b,p){b.setAttribute('aria-expanded','false');p.setAttribute('aria-hidden','true');if(!reduceMotion){const h=p.scrollHeight;p.style.maxHeight=h+'px';void p.offsetHeight;p.style.maxHeight='0px';p.addEventListener('transitionend',function onEnd(){p.hidden=true;p.style.maxHeight='';p.removeEventListener('transitionend',onEnd)},{once:true})}else{p.style.maxHeight='0px';p.hidden=true}}
+(function() {
+    'use strict';
 
-function toggle(b){const panelId=b.getAttribute('aria-controls');const panel=document.getElementById(panelId);if(!panel)return;const willExpand=b.getAttribute('aria-expanded')!=='true';if(willExpand){buttons.forEach(o=>{if(o!==b&&o.getAttribute('aria-expanded')==='true'){collapsePanel(o,document.getElementById(o.getAttribute('aria-controls')))}})}willExpand?expandPanel(b,panel):collapsePanel(b,panel)}
+    /* --- FAQ Accordion --- */
+    const faqButtons = document.querySelectorAll('.faq__button');
+    if (faqButtons.length) {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-buttons.forEach((btn,idx)=>{const panel=document.getElementById(btn.getAttribute('aria-controls'));if(panel){panel.setAttribute('aria-hidden',btn.getAttribute('aria-expanded')!=='true');panel.hidden=btn.getAttribute('aria-expanded')!=='true'}
-btn.addEventListener('click',()=>toggle(btn));btn.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();buttons[(idx+1)%buttons.length].focus()}else if(e.key==='ArrowUp'){e.preventDefault();buttons[(idx-1+buttons.length)%buttons.length].focus()}else if(e.key==='Home'){e.preventDefault();buttons[0].focus()}else if(e.key==='End'){e.preventDefault();buttons[buttons.length-1].focus()}else if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();toggle(btn)}})})})();
+        function expandPanel(button, panel) {
+            button.setAttribute('aria-expanded', 'true');
+            panel.setAttribute('aria-hidden', 'false');
+            panel.hidden = false;
+            if (!reduceMotion) {
+                panel.style.maxHeight = panel.scrollHeight + 'px';
+                panel.addEventListener('transitionend', function onEnd() {
+                    panel.style.maxHeight = 'none';
+                    panel.removeEventListener('transitionend', onEnd);
+                }, { once: true });
+            }
+        }
 
-/* Contact Form - Validation, floating labels, loading/success states */
-(function(){'use strict';const form=document.getElementById('contact-form');if(!form)return;const fields={name:{el:form.querySelector('#name'),err:form.querySelector('#name-error'),msg:'Full Name required'},email:{el:form.querySelector('#email'),err:form.querySelector('#email-error'),pat:/^[^\s@]+@[^\s@]+\.[^\s@]+$/,msg:'Valid email required'},subject:{el:form.querySelector('#subject'),err:form.querySelector('#subject-error'),msg:'Subject required'},message:{el:form.querySelector('#message'),err:form.querySelector('#message-error'),min:10,msg:'Message required (10+ chars)'}};const submitBtn=form.querySelector('.contact__submit');const success=document.getElementById('form-success');const announcer=document.getElementById('a11y-announcer');
+        function collapsePanel(button, panel) {
+            button.setAttribute('aria-expanded', 'false');
+            panel.setAttribute('aria-hidden', 'true');
+            if (!reduceMotion) {
+                const height = panel.scrollHeight;
+                panel.style.maxHeight = height + 'px';
+                void panel.offsetHeight;
+                panel.style.maxHeight = '0px';
+                panel.addEventListener('transitionend', function onEnd() {
+                    panel.hidden = true;
+                    panel.style.maxHeight = '';
+                    panel.removeEventListener('transitionend', onEnd);
+                }, { once: true });
+            } else {
+                panel.style.maxHeight = '0px';
+                panel.hidden = true;
+            }
+        }
 
-function updateLabel(e){e.classList.toggle('has-value',e.value.trim()!=='')}
-function validate(f){const e=f.el;let v=true,t=f.msg;if(f.required&&!e.value.trim())v=false;else if(f.pat&&!f.pat.test(e.value.trim()))v=false;else if(f.min&&e.value.trim().length<f.min)v=false;e.setAttribute('aria-invalid',!v);f.err.textContent=v?'':t;return v}
+        function togglePanel(button) {
+            const panelId = button.getAttribute('aria-controls');
+            const panel = document.getElementById(panelId);
+            if (!panel) return;
 
-Object.values(fields).forEach(f=>{f.el.addEventListener('input',()=>{updateLabel(f.el);if(f.el.getAttribute('aria-invalid')==='true')validate(f)});f.el.addEventListener('change',()=>updateLabel(f.el));updateLabel(f.el)});
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
-form.addEventListener('submit',async e=>{e.preventDefault();let first;Object.values(fields).forEach(f=>{if(!validate(f)&&!first)first=f.el});if(first){first.focus();if(announcer)announcer.textContent='Fix form errors';return}
-submitBtn.classList.add('loading');submitBtn.disabled=true;await new Promise(r=>setTimeout(r,1500));form.hidden=true;success.hidden=false;if(announcer)announcer.textContent='Message sent!'})})();
+            // Close other panels
+            if (!isExpanded) {
+                faqButtons.forEach(btn => {
+                    if (btn !== button && btn.getAttribute('aria-expanded') === 'true') {
+                        const otherPanel = document.getElementById(btn.getAttribute('aria-controls'));
+                        if (otherPanel) collapsePanel(btn, otherPanel);
+                    }
+                });
+            }
+
+            // Toggle current panel
+            isExpanded ? collapsePanel(button, panel) : expandPanel(button, panel);
+        }
+
+        faqButtons.forEach((button, index) => {
+            const panel = document.getElementById(button.getAttribute('aria-controls'));
+            if (panel) {
+                panel.setAttribute('aria-hidden', button.getAttribute('aria-expanded') !== 'true');
+                panel.hidden = button.getAttribute('aria-expanded') !== 'true';
+            }
+
+            button.addEventListener('click', () => togglePanel(button));
+
+            button.addEventListener('keydown', e => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    faqButtons[(index + 1) % faqButtons.length].focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    faqButtons[(index - 1 + faqButtons.length) % faqButtons.length].focus();
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    faqButtons[0].focus();
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    faqButtons[faqButtons.length - 1].focus();
+                } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    togglePanel(button);
+                }
+            });
+        });
+    }
+
+    /* --- Contact Form --- */
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        const submitBtn = contactForm.querySelector('.contact__submit');
+        const successMessage = document.getElementById('form-success');
+        const announcer = document.getElementById('a11y-announcer');
+
+        const fields = {
+            name: {
+                el: contactForm.querySelector('#name'),
+                err: contactForm.querySelector('#name-error'),
+                msg: 'Full Name required'
+            },
+            email: {
+                el: contactForm.querySelector('#email'),
+                err: contactForm.querySelector('#email-error'),
+                pat: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                msg: 'Valid email required'
+            },
+            subject: {
+                el: contactForm.querySelector('#subject'),
+                err: contactForm.querySelector('#subject-error'),
+                msg: 'Subject required'
+            },
+            message: {
+                el: contactForm.querySelector('#message'),
+                err: contactForm.querySelector('#message-error'),
+                min: 10,
+                msg: 'Message required (10+ chars)'
+            }
+        };
+
+        function updateLabelState(input) {
+            input.classList.toggle('has-value', input.value.trim() !== '');
+        }
+
+        function validateField(field) {
+            const input = field.el;
+            let isValid = true;
+            let errorText = '';
+
+            if (field.required && !input.value.trim()) {
+                isValid = false;
+                errorText = field.msg;
+            } else if (field.pat && !field.pat.test(input.value.trim())) {
+                isValid = false;
+                errorText = field.msg;
+            } else if (field.min && input.value.trim().length < field.min) {
+                isValid = false;
+                errorText = field.msg;
+            }
+
+            input.setAttribute('aria-invalid', String(!isValid));
+            field.err.textContent = errorText;
+            return isValid;
+        }
+
+        // Initialize label states and event listeners
+        Object.values(fields).forEach(field => {
+            field.el.addEventListener('input', () => {
+                updateLabelState(field.el);
+                if (field.el.getAttribute('aria-invalid') === 'true') {
+                    validateField(field);
+                }
+            });
+            field.el.addEventListener('change', () => updateLabelState(field.el));
+            updateLabelState(field.el);
+        });
+
+        // Form submission
+        contactForm.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            let firstInvalid = null;
+            Object.values(fields).forEach(field => {
+                if (!validateField(field) && !firstInvalid) {
+                    firstInvalid = field.el;
+                }
+            });
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+                if (announcer) announcer.textContent = 'Please fix form errors';
+                return;
+            }
+
+            // Show loading state
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Show success
+            contactForm.hidden = true;
+            successMessage.hidden = false;
+            if (announcer) announcer.textContent = 'Message sent successfully!';
+        });
+    }
+
+})();
