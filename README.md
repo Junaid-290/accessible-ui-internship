@@ -49,7 +49,7 @@ EchoSee is an AI-powered AR device that provides real-time subtitles to the hear
 - Animated statistics counter
 - Keyboard accessible carousel controls
 
-### Day 4-5 ✅ - Comprehensive Accessibility Audit & Polish
+### Day 4 ✅ - Comprehensive Accessibility Audit & Polish
 - Added aria-describedby to FAQ buttons for screen reader instructions
 - Added aria-busy attribute to submit button during loading state
 - Added role="alert" to form success message
